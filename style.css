@@ -1,0 +1,164 @@
+body {
+	background-color: #F0F0F0;
+}
+
+
+
+#main {
+	background-color: #FFFFFF;
+	width: 700px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 50px;
+	padding: 0;
+	border: 1px solid silver;
+	
+	font-family: 'Verdana';
+}
+
+
+#targetDice1 {
+	width: 70px;
+	height: 70px;
+	background-image:url('pics/bg.png');
+	text-align: center;
+	display:table-cell;
+	vertical-align: middle;
+	text-shadow: 0px 1px 3px #555555;
+	font-size: 2.5em;
+	color: #FFFFFF;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+}
+
+#mathsymbol {
+	width: 50px;
+	font-size: 150%;
+	font-weight: 900;
+	text-align: center;
+}
+
+#targetDice2 {
+	width: 70px;
+	height: 70px;
+	background-image:url('pics/bg.png');
+	text-align: center;
+	display:table-cell;
+	vertical-align: middle;
+	text-shadow: 0px 1px 3px #555555;
+	font-size: 2.5em;
+	color: #FFFFFF;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+}
+
+
+
+#target {
+	width: auto;
+	height: auto;
+	padding: 15px;
+	//background-color: #FFFFFF;
+	background-image:url('pics/bg2.png');
+	text-align: center;
+	font-size: 4em;
+	color: #1756b5;
+	border: 5px solid #1756b5;
+	border-radius: 15px ;
+	-moz-border-radius: 15px ;
+	
+	-moz-box-shadow: 3px 3px 4px #bbb;
+	-webkit-box-shadow: 3px 3px 4px #bbb;
+	box-shadow: 3px 3px 4px #bbb;
+}
+
+
+
+
+#dice1 {
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+#dice2 {
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+#dice3 {
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+
+
+#control {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+
+
+
+#time {
+	width: 150px;
+	height: 30px;
+	background-color: #000000;
+	text-align: center;
+	display:table-cell;
+	vertical-align: middle;
+	font-size: 80%;
+	color: #FFFFFF;
+	border-radius: 5px ;
+	-moz-border-radius: 5px ;
+	
+}
+
+
+
+
+#line {
+	margin-top: 15px;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-bottom: 15px;
+	padding: 1px;
+	border-bottom: 1px dashed #ababab;
+	text-align: left;
+	font-size:110%;
+	color: #78aeff;
+}
+
+
+
+#results {
+	background-color: #444444;
+}
+
+
+
+#results:hover{
+	background-color: #555555;
+	color: #ffffff;
+}
+
+
+
+
+#link {
+	margin: 0px;
+	padding: 7px;
+	font-size: 70%;
+	color: #bbbbbb;
+	cursor: pointer;
+}
+
+#results_table {
+	font-size: 80%;
+	color: #bbbbbb;
+	padding-left: 200px;
+	padding-bottom: 10px;
+	background-color: #444444;
+}
+
