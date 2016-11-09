@@ -1,0 +1,448 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+		<link rel = "stylesheet" type = "text/css" href = "style.css" />
+		<title> MathDice </title> 
+	</head>
+
+	
+	<script type="text/javascript">
+		
+		var master_clock = 30;
+		var clock = master_clock;
+		var timer_thread;
+		var dice1;
+		var dice2;
+		var dice3;
+		var target_number;
+		var best_combinations = new Array;
+		var best_combinations_string = new Array;
+		var best_distances = new Array(1000,1000,1000,1000);
+		
+		
+		function new_game()
+		{
+			
+			for (i=1;i<=15;i++)
+			{
+				setTimeout("randomize()",(100*i));
+			}
+			
+			
+			prepare_game();
+			start_timer();
+			
+			document.getElementById("newGame").disabled = true;
+			setTimeout("document.getElementById(\"reset\").disabled = false;",2500);
+			
+		}
+		
+		function start_timer()
+		{
+				time_thread = setTimeout("reduce_timer()",2500);
+		}
+		
+		
+		function reduce_timer()
+		{
+			if (clock == 1)
+			{
+				document.getElementById("time").innerHTML = "Τέλος χρόνου!";
+				clock = master_clock;
+				calculate_all_combinations(dice1, dice2, dice3);
+				return;
+			}
+			clock = clock -1;
+			document.getElementById("time").innerHTML = clock + "\"";
+			timer_thread = setTimeout("reduce_timer()",1000);
+		}
+		
+		
+		function randomize()
+		{
+			target1 = random1_12();
+			target2 = random1_12();
+			target_number = target1 * target2;
+			
+			document.getElementById("targetDice1").innerHTML = target1;
+			document.getElementById("targetDice2").innerHTML = target2;
+			document.getElementById("target").innerHTML = target1 * target2;
+			
+			
+			dice1 = random1_6();
+			dice2 = random1_6();
+			dice3 = random1_6();
+			
+			if (dice1==1) document.getElementById("dice1").src = "pics/1.png";
+			if (dice1==2) document.getElementById("dice1").src = "pics/2.png";
+			if (dice1==3) document.getElementById("dice1").src = "pics/3.png";
+			if (dice1==4) document.getElementById("dice1").src = "pics/4.png";
+			if (dice1==5) document.getElementById("dice1").src = "pics/5.png";
+			if (dice1==6) document.getElementById("dice1").src = "pics/6.png";
+			
+			if (dice2==1) document.getElementById("dice2").src = "pics/1.png";
+			if (dice2==2) document.getElementById("dice2").src = "pics/2.png";
+			if (dice2==3) document.getElementById("dice2").src = "pics/3.png";
+			if (dice2==4) document.getElementById("dice2").src = "pics/4.png";
+			if (dice2==5) document.getElementById("dice2").src = "pics/5.png";
+			if (dice2==6) document.getElementById("dice2").src = "pics/6.png";
+			
+			
+			if (dice3==1) document.getElementById("dice3").src = "pics/1.png";
+			if (dice3==2) document.getElementById("dice3").src = "pics/2.png";
+			if (dice3==3) document.getElementById("dice3").src = "pics/3.png";
+			if (dice3==4) document.getElementById("dice3").src = "pics/4.png";
+			if (dice3==5) document.getElementById("dice3").src = "pics/5.png";
+			if (dice3==6) document.getElementById("dice3").src = "pics/6.png";
+			
+		}
+		
+		function random1_12()
+		{
+			randomnumber=Math.floor(Math.random()*13);
+			while (randomnumber==0) randomnumber=Math.floor(Math.random()*13);
+			return randomnumber;
+		}
+		
+		function random1_6()
+		{
+			randomnumber=Math.floor(Math.random()*7);
+			while (randomnumber==0) randomnumber=Math.floor(Math.random()*7);
+			return randomnumber;
+		}
+		
+		
+		function reset_game()
+		{	
+
+			clearTimeout( timer_thread );
+			
+			prepare_game();
+			
+			document.getElementById("targetDice1").innerHTML = "?";
+			document.getElementById("targetDice2").innerHTML = "?";
+			document.getElementById("target").innerHTML = "?";
+			
+			document.getElementById("dice1").src = "pics/dice_null.png";
+			document.getElementById("dice2").src = "pics/dice_null.png";
+			document.getElementById("dice3").src = "pics/dice_null.png";
+			
+			
+		}
+		
+		
+		function prepare_game()
+		{
+			document.getElementById("results").innerHTML = "";
+			best_combinations = new Array;
+			best_combinations_string = new Array;
+			best_distances = new Array(1000,1000,1000,1000);
+			
+			document.getElementById("newGame").disabled = false;
+			document.getElementById("reset").disabled = true;
+			clock = master_clock;
+			document.getElementById("time").innerHTML = "Χρόνος:" + clock +"\"";
+		}
+		
+		
+		function calculate_all_combinations(a,b,c)
+		{			
+			calculate_combinations(a,b,c);
+			calculate_combinations(a,c,b);
+			calculate_combinations(b,a,c);
+			calculate_combinations(b,c,a);
+			calculate_combinations(c,a,b);
+			calculate_combinations(c,b,a);
+			show_results();
+		}
+		
+		
+		function calculate_combinations(a,b,c)
+		{
+			
+			for (i=0;i<5;i++)
+			{
+				for (j=0;j<5;j++)
+				{
+					// check the combination: (a ; b) ; c
+					
+					/********** 1st operator ************/
+					if (i==0)	// +
+					{
+						res = a + b;
+						res = Math.round(res*100)/100;
+						res_string = "(" + a + "+" + b + ")";
+					}
+					else if (i==1)	// -
+					{
+						res = a - b;
+						res = Math.round(res*100)/100;
+						res_string = "(" + a + "-" + b + ")";
+					}
+					else if (i==2)	// *
+					{
+						res = a * b;
+						res = Math.round(res*100)/100;
+						res_string = "(" + a + "*" + b + ")";
+					}
+					else if (i==3)	// /
+					{
+						res = a / b;
+						res = Math.round(res*100)/100;
+						res_string = "(" + a + "/" + b + ")";
+					}
+					else if (i==4)	// ^
+					{
+						res = Math.pow(a,b);
+						res = Math.round(res*100)/100;
+						res_string = "(" + a + "^" + b + ")";
+					}
+					
+					/********** 2nd operator ************/
+					if (j==0)	// +
+					{
+						res = res + c;
+						res = Math.round(res*100)/100;
+						res_string += "+"+c+"="+res;
+						update_best_combinations(res,res_string);
+					}
+					else if (j==1)	// -
+					{
+						res = res - c;
+						res = Math.round(res*100)/100;
+						res_string += "-"+c+"="+res;
+						update_best_combinations(res,res_string);
+					}
+					else if (j==2)	// *
+					{
+						res = res * c;
+						res = Math.round(res*100)/100;
+						res_string += "*"+c+"="+res;
+						update_best_combinations(res,res_string);
+					}
+					else if (j==3)	// -
+					{
+						res = res / c;
+						res = Math.round(res*100)/100;
+						res_string += "/"+c+"="+res;
+						update_best_combinations(res,res_string);
+					}
+					else if (j==4)	// ^
+					{
+						res = Math.pow(res,c);
+						res = Math.round(res*100)/100;
+						res_string += "^"+c+"="+res;
+						update_best_combinations(res,res_string);
+					}
+					
+					
+					
+					
+					
+					// check the combination: a ; (b ; c)
+					
+					/********** 1st operator ************/
+					if (i==0)	// +
+					{
+						res = b + c;
+						res = Math.round(res*100)/100;
+						res_string = "(" + b + "+" + c + ")";
+					}
+					else if (i==1)	// -
+					{
+						res = b - c;
+						res = Math.round(res*100)/100;
+						res_string = "(" + b + "-" + c + ")";
+					}
+					else if (i==2)	// *
+					{
+						res = b * c;
+						res = Math.round(res*100)/100;
+						res_string = "(" + b + "*" + c + ")";
+					}
+					else if (i==3)	// /
+					{
+						res = b / c;
+						res = Math.round(res*100)/100;
+						res_string = "(" + b + "/" + c + ")";
+					}
+					else if (i==4)	// ^
+					{
+						res = Math.pow(b,c);
+						res = Math.round(res*100)/100;
+						res_string = "(" + b + "^" + c + ")";
+					}
+					
+					/********** 2nd operator ************/
+					if (j==0)	// +
+					{
+						res = a + res;
+						res = Math.round(res*100)/100;
+						res_string = a+"+"+res_string+"="+res;
+						update_best_combinations(res,res_string);
+					}
+					else if (j==1)	// -
+					{
+						res = a - res;
+						res = Math.round(res*100)/100;
+						res_string = a+"-"+res_string+"="+res;
+						update_best_combinations(res,res_string);
+					}
+					else if (j==2)	// *
+					{
+						res = a * res;
+						res = Math.round(res*100)/100;
+						res_string = a+"*"+res_string+"="+res;
+						update_best_combinations(res,res_string);
+					}
+					else if (j==3)	// -
+					{
+						res = a / res;
+						res = Math.round(res*100)/100;
+						res_string = a+"/"+res_string+"="+res;;
+						update_best_combinations(res,res_string);
+					}
+					else if (j==4)	// ^
+					{
+						res = Math.pow(a,res);
+						res = Math.round(res*100)/100;
+						res_string = a+"^"+res_string+"="+res;
+						update_best_combinations(res,res_string);
+					}
+				}			
+			}
+		}
+		
+		
+		
+		function update_best_combinations(res,res_string)
+		{
+			distance = Math.abs(res-target_number);
+			if (best_distances[0]>distance)
+			{
+				best_distances[0]=distance;
+				best_combinations[0] = res;
+				best_combinations_string[0] = res_string;
+				return;
+			}
+			if (best_distances[1]>distance)
+			{
+				best_distances[1]=distance;
+				best_combinations[1] = res;
+				best_combinations_string[1] = res_string;
+				return;
+			}
+			if (best_distances[2]>distance)
+			{
+				best_distances[2]=distance;
+				best_combinations[2] = res;
+				best_combinations_string[2] = res_string;
+				return;
+			}
+		}
+		
+		
+		function show_results()
+		{
+			
+			
+			document.getElementById("results").innerHTML += "<p id=\"link\" onclick=\"open_close_results();\" >Εμφάνιση 3 κοντινότερων λύσεων?</p>";
+			document.getElementById("results").innerHTML += "<div id=\"results_table\">";
+			
+			
+			for (i=0;i<3;i++)
+			{
+				document.getElementById("results_table").innerHTML += best_combinations_string[i] + "<br />";
+			}
+			
+			document.getElementById("results_table").innerHTML += "</div>";
+			document.getElementById('results_table').style.display='none';
+		}
+		
+		
+		
+		function open_close_results()
+		{
+			if (document.getElementById('results_table').style.display=='') document.getElementById('results_table').style.display='none';
+			else if (document.getElementById('results_table').style.display=='none') document.getElementById('results_table').style.display='';
+		}
+		
+	</script>
+	
+
+	<body onload="prepare_game();">
+		
+		<div id="main">
+			
+			
+			<img src="pics/logo.png" />
+			
+
+			
+			<div id="line">Αριθμός  στόχος:</div>
+			
+			<table style="margin-left: auto; margin-right: auto;";>
+				<tr>
+				<td>
+					<table>
+						<tr>
+							<td><div id="targetDice1">?</div></td>
+							<td><div id="mathsymbol">x</div></td>
+							<td><div id="targetDice2">?</div></td>
+							<td><div id="mathsymbol">=</td>
+						</tr>				
+					</table>
+				</td>
+				<td>
+					<div id="target">?</div>
+				</td>
+				</tr>
+			</table>
+			
+			
+
+			
+			<div id="line">Τυχαίοι αριθμοί:</div>
+			
+			<table style="margin-left: auto; margin-right: auto;";>
+				<tr>
+					<td><img id="dice1" src="pics/dice_null.png" /></td>
+					<td><img id="dice2" src="pics/dice_null.png" /></td>
+					<td><img id="dice3" src="pics/dice_null.png" /></td>
+				</tr>
+			</table>
+			
+			<br />
+
+			
+			<table id="control">
+			<tr>
+				
+				<td><input type="submit"  value="Νέο Παιχνίδι"  id="newGame" onclick="new_game();" /></td>
+				<td><input type="submit"  value="Reset" id="reset" onclick="reset_game()" /></td>
+				
+				<td>
+					<div id="time"></div>
+				</td>
+			</tr>
+			</table>
+			
+			
+			<br />
+			<div id="results"></div>
+					
+				
+			
+		</div>
+				
+				
+
+
+
+
+	</body>
+
+
+</html>
