@@ -1,5 +1,5 @@
 # MathDice
-A simple approach of the famous game from Thinkfun, Math Dice!
+A simple approach of the famous game from Thinkfun, Math Dice! Try it online at codepen: [http://codepen.io/tgogos/full/yVoyzv/](http://codepen.io/tgogos/full/yVoyzv/)
 
 ## Preview
 ![game preview](README.files/prntScr.jpg)
